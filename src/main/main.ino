@@ -1,7 +1,10 @@
 #include "pinout.h"
 #include "tests.h"
+#include "state_machine.h"
 
 using namespace drivers_controller;
+
+ControllerState currentControllerState;
 
 void setup() {
   for (int i = 0; i < powerOutN; i++) {
@@ -24,14 +27,11 @@ void setup() {
   pinMode(directionSetBackward, INPUT_PULLUP);
   pinMode(powerSetIncrement,    INPUT_PULLUP);
   pinMode(powerSetDecrement,    INPUT_PULLUP);
+
+  ControllerState currentControllerState;
 }
 
-
-
 void loop() {
-  digitalWrite(getDirectionInPin(-1), 1 - digitalRead(directionSetBackward));
-  digitalWrite(getDirectionInPin(1), 1 - digitalRead(directionSetForward));
-
-  digitalWrite(getPowerInPin(-1), 1 - digitalRead(powerSetDecrement));
-  digitalWrite(getPowerInPin(1), 1 - digitalRead(powerSetIncrement));
+  //manage state;
+  //switch output;
 }

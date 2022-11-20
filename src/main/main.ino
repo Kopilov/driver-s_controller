@@ -1,5 +1,6 @@
 #include "pinout.h"
 #include "state_machine.h"
+#include "output.h"
 #include "tests.h"
 
 using namespace drivers_controller;
@@ -32,6 +33,6 @@ void setup() {
 
 void loop() {
   controllerStateMachine->determineState();
-  //switch output;
+  writeOutput(controllerStateMachine);
   delay(1000);
 }

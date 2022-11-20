@@ -1,11 +1,10 @@
 #include "pinout.h"
-#include "tests.h"
 #include "state_machine.h"
+#include "tests.h"
 
 using namespace drivers_controller;
 
-ControllerState currentControllerState;
-
+ControllerStateMachine* controllerStateMachine;
 void setup() {
   for (int i = 0; i < powerOutN; i++) {
     pinMode(i + powerOutOffset, OUTPUT);
@@ -28,10 +27,11 @@ void setup() {
   pinMode(powerSetIncrement,    INPUT_PULLUP);
   pinMode(powerSetDecrement,    INPUT_PULLUP);
 
-  ControllerState currentControllerState;
+  controllerStateMachine = new LoopbackStateMachine();
 }
 
 void loop() {
-  //manage state;
+  controllerStateMachine->determineState();
   //switch output;
+  delay(1000);
 }

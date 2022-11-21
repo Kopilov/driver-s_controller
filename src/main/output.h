@@ -23,7 +23,7 @@ void writeDirectionIndicator(int directionState) {
   for (int i = -1; i <=1; i++) {
     digitalWrite(getDirectionInPin(i), LOW);
   }
-  digitalWrite(getDirectionInPin(directionState), LOW);
+  digitalWrite(getDirectionInPin(directionState), HIGH);
 }
 
 void writeDirectionSwitchers(int directionState) {

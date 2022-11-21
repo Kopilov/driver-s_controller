@@ -54,7 +54,6 @@ class LoopbackStateMachine: public ControllerStateMachine {
 
   */
   private:
-  int stages = 8;
   int stage = 0;
   public:
   ControllerState determineState() {
@@ -69,40 +68,42 @@ class LoopbackStateMachine: public ControllerStateMachine {
         if (s != 0) stage = 2;
         break;
       }
-      case 3: {
+      case 2: {
         int s = decrementPower();
-        if (s != 0) stage = 4;
+        if (s != 0) stage = 3;
+        break;
+      }
+      case 3: {
+        int s = incrementPower();
+        if (getPower() == 0) stage = 4;
+        break;
       }
       case 4: {
-        int s = incrementPower();
-        if (getPower() == 0) stage = 5;
+        neutralDirection();
+        stage = 5;
         break;
       }
       case 5: {
-        neutralDirection();
+        backwardDirection();
         stage = 6;
         break;
       }
       case 6: {
-        backwardDirection();
-        stage = 7;
+        int s = decrementPower();
+        if (s != 0) stage = 7;
         break;
       }
       case 7: {
-        int s = decrementPower();
+        int s = incrementPower();
         if (s != 0) stage = 8;
+        break;
       }
       case 8: {
-        int s = incrementPower();
-        if (s != 0) stage = 9;
+        int s = decrementPower();
+        if (getPower() == 0) stage = 9;
         break;
       }
       case 9: {
-        int s = decrementPower();
-        if (getPower() == 0) stage = 10;
-        break;
-      }
-      case 10: {
         neutralDirection();
         stage = 0;
         break;

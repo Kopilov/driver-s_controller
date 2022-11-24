@@ -49,9 +49,17 @@ void writeDirectionIndicator(int directionState) {
   digitalWrite(getDirectionInPin(directionState), HIGH);
 }
 
+int directionSwitchers[directionInN][directionOutN] = {
+// QS1, QS3, QS2, QS4, QS5, QS7, QS6, QS8, QS9, QS10, QS11, QS12
+  {0,   1,   0,   1,   0,   1,   0,   1,   0,   1,    1,    0}, //Назад
+  {0,   0,   0,   0,   0,   0,   0,   0,   0,   0,    1,    1}, //O
+  {1,   0,   1,   0,   1,   0,   1,   0,   1,   0,    0,    1}  //Вперёд
+};
+
+
 void writeDirectionSwitchers(int directionState) {
   for (int i = 0; i < directionOutN; i++) {
-    digitalWrite(getDirectionOutPin(i), LOW);
+    digitalWrite(getDirectionOutPin(i), directionSwitchers[directionState + 1][i]);
   }
 }
 

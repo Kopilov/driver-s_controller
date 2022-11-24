@@ -19,8 +19,8 @@ QK6
 QK7
 QK8
 */ 
-int powerOutOffset = 2;
-int powerOutN = 12;
+const int powerOutOffset = 2;
+const int powerOutN = 12;
 
 /*
 Перевод номера (позиции с 0) силового контактора в эквивалентный номер пина
@@ -51,8 +51,8 @@ X1
 5
 6
 */
-int powerInOffset = 14;
-int powerInN = 18;
+const int powerInOffset = 14;
+const int powerInN = 18;
 
 /*
 Перевод значения «позиция главного барабана» (тормоз от -6 до -1, нейтраль 0, далее ускорение)
@@ -78,8 +78,8 @@ QS10
 QS11
 QS12
 */
-int directionOutOffset = 32;
-int directionOutN = 12;
+const int directionOutOffset = 32;
+const int directionOutN = 12;
 
 /*
 Перевод номера (позиции с 0) контактора реверса в эквивалентный номер пина
@@ -92,8 +92,8 @@ int getDirectionOutPin(int contactorPosition) {
 Индикаторы эквивалентного положения реверсивного барабана (3 шт)
 От D44 до D46 в порядке «назад-0-вперёд»
 */
-int directionInOffset = 44;
-int directionInN = 3;
+const int directionInOffset = 44;
+const int directionInN = 3;
 
 /*
 Перевод значения «позиция реверсивного барабана» (назад -1, нейтраль 0, вперёд 1)
@@ -108,15 +108,15 @@ int getDirectionInPin(int directionPosition) {
 D48 назад
 D49 вперёд
 */
-int directionSetBackward = 48;
-int directionSetForward = 49;
+const int directionSetBackward = 48;
+const int directionSetForward = 49;
 
 /*
 Основной джойстик
 D50 добавить скорость
 D51 снизить скорость
 */
-int powerSetIncrement = 50;
-int powerSetDecrement = 51;
+const int powerSetIncrement = 50;
+const int powerSetDecrement = 51;
 
 }

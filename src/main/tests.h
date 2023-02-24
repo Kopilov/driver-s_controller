@@ -1,5 +1,5 @@
 #include "pinout.h"
-#include "state_machine.h"
+#include "state_controller.h"
 
 #pragma once
 
@@ -45,9 +45,9 @@ void blinkAll() {
 }
 
 /**
- Тестовая реализация ControllerStateMachine, меняет положение контроллера по зацикленной траектории
+ Тестовая реализация StateController, меняет положение контроллера по зацикленной траектории
 */
-class LoopbackStateMachine: public ControllerStateMachine {
+class LoopbackStateController: public StateController {
   /*
   Порядок переключений:
   0-вперёд-максимум-минимум-0-назад-минимум-максимум
@@ -55,62 +55,65 @@ class LoopbackStateMachine: public ControllerStateMachine {
   */
   private:
   int stage = 0;
+
   public:
-  ControllerState determineState() {
+
+  void determineState() {
+    delay(1000);
     switch(stage) {
       case 0: {
-        forwardDirection();
+        stateMachime.forwardDirection();
         stage = 1;
         break;
       }
       case 1: {
-        int s = incrementPower();
+        int s = stateMachime.incrementPower();
         if (s != 0) stage = 2;
         break;
       }
       case 2: {
-        int s = decrementPower();
+        int s = stateMachime.decrementPower();
         if (s != 0) stage = 3;
         break;
       }
       case 3: {
-        int s = incrementPower();
-        if (getPower() == 0) stage = 4;
+        int s = stateMachime.incrementPower();
+        if (stateMachime.getPower() == 0) stage = 4;
         break;
       }
       case 4: {
-        neutralDirection();
+        stateMachime.neutralDirection();
         stage = 5;
         break;
       }
       case 5: {
-        backwardDirection();
+        stateMachime.backwardDirection();
         stage = 6;
         break;
       }
       case 6: {
-        int s = decrementPower();
+        int s = stateMachime.decrementPower();
         if (s != 0) stage = 7;
         break;
       }
       case 7: {
-        int s = incrementPower();
+        int s = stateMachime.incrementPower();
         if (s != 0) stage = 8;
         break;
       }
       case 8: {
-        int s = decrementPower();
-        if (getPower() == 0) stage = 9;
+        int s = stateMachime.decrementPower();
+        if (stateMachime.getPower() == 0) stage = 9;
         break;
       }
       case 9: {
-        neutralDirection();
+        stateMachime.neutralDirection();
         stage = 0;
         break;
       }
      default: {}
     }
-    return currentControllerState;
+    return stateMachime.currentControllerState;
   }
 };
 

@@ -35,11 +35,12 @@ reverse
 */
 class ControllerStateMachine {
   protected:
-  ControllerState currentControllerState;
   int powerMin = -6;
   int powerMax = 11;
 
   public:
+
+  ControllerState currentControllerState;
 
   int getPower() {
     return currentControllerState.power;
@@ -130,11 +131,6 @@ class ControllerStateMachine {
     currentControllerState.direction = 0;
     return 0;
   }
-  /**
-  Вычислить текущее состояние из фактического предыдущего (одномомнтного или временного ряда)
-  и внешних факторов (органы управления или тестовые данные)
-  */
-  virtual ControllerState determineState() = 0;
 };
 
 }

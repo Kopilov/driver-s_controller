@@ -1,9 +1,10 @@
-#include "state_controller.h"
+#include "dto.h"
 #include "input.h"
 #include "output.h"
+#include "state_controller.h"
 #include "tests.h"
 
-using namespace drivers_controller;
+namespace drivers_controller {
 
 StateController* stateController = new DelayStateController();
 InputData input;
@@ -33,8 +34,20 @@ void setup() {
 }
 
 void loop() {
-  echoOutput();
-
-  //writeOutput(stateController->determineState(input));
+  /////tests
+  //echoOutput();
   //blinkAll();
+
+  readInput(input);
+  ControllerState state = stateController->determineState(input);
+  writeOutput(state);
+}
+
+}
+
+void setup() {
+  drivers_controller::setup();
+}
+void loop() {
+  drivers_controller::loop();
 }

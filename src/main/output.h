@@ -1,5 +1,5 @@
 #include "pinout.h"
-#include "state_machine.h"
+#include "dto.h"
 
 #pragma once
 

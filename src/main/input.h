@@ -1,6 +1,7 @@
-#pragma once
-
 #include "pinout.h"
+#include "dto.h"
+
+#pragma once
 
 namespace drivers_controller {
 
@@ -18,6 +19,13 @@ bool powerIncrementEnabled() {
 
 bool powerDecrementEnabled() {
   return digitalRead(powerSetDecrement) == 0;
+}
+
+void readInput(InputData& input) {
+  input.directionForward = directionForwardEnabled();
+  input.directionBackward = directionBackwardEnabled();
+  input.powerIncrement = powerIncrementEnabled();
+  input.powerDecrement = powerDecrementEnabled();
 }
 
 }

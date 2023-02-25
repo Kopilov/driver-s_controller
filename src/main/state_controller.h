@@ -5,15 +5,6 @@
 
 namespace drivers_controller {
 
-/**
-  * Данные, считываемые со входов
-  */
-class InputData {
-  bool directionForward = false;
-  bool directionBackward = false;
-  bool powerIncrement = false;
-  bool powerDecrement = false;
-};
 
 /**
  * Управление ControllerStateMachine на основе сигналов InputData

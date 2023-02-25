@@ -1,16 +1,8 @@
 #pragma once
 
-namespace drivers_controller {
+#include "dto.h"
 
-/**
-Описание состояния (положения) оригинального контроллера,
-включает положения главного и реверсивного барабанов.
-*/
-class ControllerState {
-  public:
-  int power = 0;
-  int direction = 0;
-};
+namespace drivers_controller {
 
 /**
 Конечный автомат, описывающий поведение контроллера через объект ControllerState.

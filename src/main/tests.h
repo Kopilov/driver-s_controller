@@ -1,3 +1,4 @@
+#include "output.h"
 #include "pinout.h"
 #include "state_controller.h"
 
@@ -44,9 +45,17 @@ void blinkAll() {
   blinkDirectionIn();
 }
 
+void echoOutput() {
+  if (powerIncrementEnabled()) writePowerIndicator(1);
+  if (powerDecrementEnabled()) writePowerIndicator(-1);
+
+  if (directionForwardEnabled()) writeDirectionIndicator(1);
+  if (directionBackwardEnabled()) writeDirectionIndicator(-1);
+}
+
 /**
- Тестовая реализация StateController, меняет положение контроллера по зацикленной траектории
-*/
+ Тестовая реализация StateController, меняет положение контроллера по зацикленной траектории без учёта InputData
+ */
 class LoopbackStateController: public StateController {
   /*
   Порядок переключений:
@@ -58,7 +67,7 @@ class LoopbackStateController: public StateController {
 
   public:
 
-  void determineState() {
+  ControllerState determineState(InputData input) {
     delay(1000);
     switch(stage) {
       case 0: {

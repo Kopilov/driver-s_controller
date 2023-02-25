@@ -1,11 +1,13 @@
-#include "pinout.h"
 #include "state_controller.h"
+#include "input.h"
 #include "output.h"
 #include "tests.h"
 
 using namespace drivers_controller;
 
-StateController* stateController;
+StateController* stateController = new DelayStateController();
+InputData input;
+
 void setup() {
   for (int i = 0; i < powerOutN; i++) {
     pinMode(i + powerOutOffset, OUTPUT);
@@ -28,11 +30,11 @@ void setup() {
   pinMode(powerSetIncrement,    INPUT_PULLUP);
   pinMode(powerSetDecrement,    INPUT_PULLUP);
 
-  stateController = new LoopbackStateController();
 }
 
 void loop() {
-  stateController->determineState();
-  writeOutput(stateController->stateMachime);
+  echoOutput();
+
+  //writeOutput(stateController->determineState(input));
   //blinkAll();
 }

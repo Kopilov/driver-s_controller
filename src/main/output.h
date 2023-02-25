@@ -1,4 +1,3 @@
-//#include "Arduino.h"
 #include "pinout.h"
 #include "state_machine.h"
 
@@ -63,11 +62,11 @@ void writeDirectionSwitchers(int directionState) {
   }
 }
 
-void writeOutput(ControllerStateMachine& controllerStateMachine) {
-  writePowerIndicator(controllerStateMachine.getPower());
-  writePowerSwitchers(controllerStateMachine.getPower());
-  writeDirectionIndicator(controllerStateMachine.getDirection());
-  writeDirectionSwitchers(controllerStateMachine.getDirection());
+void writeOutput(ControllerState controllerState) {
+  writePowerIndicator(controllerState.power);
+  writePowerSwitchers(controllerState.power);
+  writeDirectionIndicator(controllerState.direction);
+  writeDirectionSwitchers(controllerState.direction);
 }
 
 }

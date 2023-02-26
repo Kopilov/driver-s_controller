@@ -31,6 +31,7 @@ void setup() {
   pinMode(powerSetIncrement,    INPUT_PULLUP);
   pinMode(powerSetDecrement,    INPUT_PULLUP);
 
+  //Serial.begin(9600);
 }
 
 void loop() {

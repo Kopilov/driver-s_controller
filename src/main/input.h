@@ -26,6 +26,14 @@ void readInput(InputData& input) {
   input.directionBackward = directionBackwardEnabled();
   input.powerIncrement = powerIncrementEnabled();
   input.powerDecrement = powerDecrementEnabled();
+
+  if (input.directionForward && input.directionBackward) {
+    //Ошибка (возможно, замыкание контактов). При необходимости добавить alarm
+  }
+
+  if (input.powerIncrement && input.powerDecrement) {
+    //Ошибка (возможно, замыкание контактов). При необходимости добавить alarm
+  }
 }
 
 }

@@ -71,58 +71,58 @@ class LoopbackStateController: public StateController {
     delay(1000);
     switch(stage) {
       case 0: {
-        stateMachime.forwardDirection();
+        stateMachine.forwardDirection();
         stage = 1;
         break;
       }
       case 1: {
-        int s = stateMachime.incrementPower();
+        int s = stateMachine.incrementPower();
         if (s != 0) stage = 2;
         break;
       }
       case 2: {
-        int s = stateMachime.decrementPower();
+        int s = stateMachine.decrementPower();
         if (s != 0) stage = 3;
         break;
       }
       case 3: {
-        int s = stateMachime.incrementPower();
-        if (stateMachime.getPower() == 0) stage = 4;
+        int s = stateMachine.incrementPower();
+        if (stateMachine.getPower() == 0) stage = 4;
         break;
       }
       case 4: {
-        stateMachime.neutralDirection();
+        stateMachine.neutralDirection();
         stage = 5;
         break;
       }
       case 5: {
-        stateMachime.backwardDirection();
+        stateMachine.backwardDirection();
         stage = 6;
         break;
       }
       case 6: {
-        int s = stateMachime.decrementPower();
+        int s = stateMachine.decrementPower();
         if (s != 0) stage = 7;
         break;
       }
       case 7: {
-        int s = stateMachime.incrementPower();
+        int s = stateMachine.incrementPower();
         if (s != 0) stage = 8;
         break;
       }
       case 8: {
-        int s = stateMachime.decrementPower();
-        if (stateMachime.getPower() == 0) stage = 9;
+        int s = stateMachine.decrementPower();
+        if (stateMachine.getPower() == 0) stage = 9;
         break;
       }
       case 9: {
-        stateMachime.neutralDirection();
+        stateMachine.neutralDirection();
         stage = 0;
         break;
       }
      default: {}
     }
-    return stateMachime.currentControllerState;
+    return stateMachine.currentControllerState;
   }
 };
 

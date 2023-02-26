@@ -42,15 +42,31 @@ class DelayStateController: public StateController {
   /**
    * Разгон
    */
-  int incrementPower() {
-    return stateMachine.incrementPower();
+  int incrementPower(InputData input) {
+    int result = 0;
+    if (stateMachine.getDirection() == 0) { //нейтральное положение
+      result = swithDirectionFromNeutral(input);
+    } else {
+      result = stateMachine.incrementPower();
+    }
+    if (result != 0) {
+      //переключение не выполнено, при необходимости добавить логику
+    }
   }
 
   /**
    * Тормоз
    */
-  int decrementPower() {
-    return stateMachine.decrementPower();
+  int decrementPower(InputData input) {
+    int result = 0;
+    if (stateMachine.getDirection() == 0) { //нейтральное положение
+      result = swithDirectionFromNeutral(input);
+    } else {
+      result = stateMachine.decrementPower();
+    }
+    if (result != 0) {
+      //переключение не выполнено, при необходимости добавить логику
+    }
   }
 
   /**
@@ -75,32 +91,58 @@ class DelayStateController: public StateController {
   ControllerState previousState;
   InputData previousInput;
 
+  //Удержание джойстика на разгон (факт удержания)
+  int powerIncrementPressed = 0;
+  //Удержание джойстика на разгон (время с момента регстрации события в мс )
+  int powerIncrementDuration = 0;
+
+  //Удержание джойстика на тормоз (факт удержания)
+  int powerDecrementPressed = 0;
+  //Удержание джойстика на тормоз (время с момента регстрации события в мс )
+  int powerDecrementDuration = 0;
+
   public:
 
   ControllerState determineState(InputData input) {
     delay(readingPeriod);
 
-    if (!previousInput.powerIncrement && input.powerIncrement) { //нажатие джойстика на разгон
-      int result = 0;
-      if (stateMachine.getDirection() == 0) { //нейтральное положение
-        result = swithDirectionFromNeutral(input);
-      } else {
-        result = incrementPower();
+    if (!previousInput.powerIncrement && input.powerIncrement) { //Нажатие джойстика на разгон
+      powerIncrementPressed = 1;
+      incrementPower(input);
+    }
+
+    if (previousInput.powerIncrement && !input.powerIncrement) { //Отпускание джойстика на разгон
+      powerIncrementPressed = 0;
+      powerIncrementDuration = 0;
+    }
+
+    if (previousInput.powerIncrement && input.powerIncrement) { //Удержание джойстика на разгон
+      if (powerIncrementPressed) {
+        powerIncrementDuration += readingPeriod;
       }
-      if (result != 0) {
-        //переключение не выполнено, при необходимости добавить логику
+      if (powerIncrementDuration >= manualSwitchingInterval) {
+        incrementPower(input);
+        powerIncrementDuration = 0;
       }
     }
 
-    if (!previousInput.powerDecrement && input.powerDecrement) { //нажатие джойстика на тормоз
-      int result = 0;
-      if (stateMachine.getDirection() == 0) { //нейтральное положение
-        result = swithDirectionFromNeutral(input);
-      } else {
-        result = decrementPower();
+    if (!previousInput.powerDecrement && input.powerDecrement) { //Нажатие джойстика на тормоз
+      powerDecrementPressed = 1;
+      decrementPower(input);
+    }
+
+    if (previousInput.powerDecrement && !input.powerDecrement) { //Отпускание джойстика на тормоз
+      powerDecrementPressed = 0;
+      powerDecrementDuration = 0;
+    }
+
+    if (previousInput.powerDecrement && input.powerDecrement) { //Удержание джойстика на тормоз
+      if (powerDecrementPressed) {
+        powerDecrementDuration += readingPeriod;
       }
-      if (result != 0) {
-        //переключение не выполнено, при необходимости добавить логику
+      if (powerDecrementDuration >= manualSwitchingInterval) {
+        decrementPower(input);
+        powerDecrementDuration = 0;
       }
     }
 

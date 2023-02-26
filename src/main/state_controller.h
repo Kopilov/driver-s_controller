@@ -26,7 +26,9 @@ class DelayStateController: public StateController {
 
   protected:
 
-  // переключение реверса в нужное положение из нейтрали
+  /**
+   * Переключение реверса в нужное положение из нейтрали при сигнале на изменение мощности
+   */
   int swithDirectionFromNeutral(InputData input) {
     int result = 0;
     if (input.directionForward) {
@@ -37,12 +39,37 @@ class DelayStateController: public StateController {
     }
   }
 
+  /**
+   * Разгон
+   */
   int incrementPower() {
     return stateMachine.incrementPower();
   }
 
+  /**
+   * Тормоз
+   */
   int decrementPower() {
     return stateMachine.decrementPower();
+  }
+
+  /**
+   * Обработка переключений тумблера реверса (в том числе из недопустимых состояний)
+   */
+  int directionSwitchHandler() {
+    if (stateMachine.getDirection() == 0) { //нейтральное положение
+      //ничего не делаем, при разгоне направление будет учтено
+    }
+    if (stateMachine.getPower() == 0) {
+      //При нулевой мощности переводим в нейтраль
+      stateMachine.neutralDirection();
+    }
+    if (stateMachine.getPower() > 0) {
+      //При положительной мощности аварийный тормоз
+    }
+    if (stateMachine.getPower() < 0) {
+      //При тормозе асинхронно переводим в нейтраль
+    }
   }
 
   ControllerState previousState;
@@ -78,11 +105,11 @@ class DelayStateController: public StateController {
     }
 
     if (!previousInput.directionForward && input.directionForward) { //включение тумблера реверса вперёд
-//      stateMachine.forwardDirection();
+      directionSwitchHandler();
     }
 
     if (!previousInput.directionBackward && input.directionBackward) { //включение тумблера реверса назад
-//      stateMachine.backwardDirection();
+      directionSwitchHandler();
     }
 
     previousInput = input;

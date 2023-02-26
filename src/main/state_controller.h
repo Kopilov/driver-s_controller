@@ -43,11 +43,16 @@ class DelayStateController: public StateController {
    * Разгон
    */
   int incrementPower(InputData input) {
-    int result = 0;
+    int result = 0;    
     if (stateMachine.getDirection() == 0) { //нейтральное положение
       result = swithDirectionFromNeutral(input);
     } else {
-      result = stateMachine.incrementPower();
+      //Если направление на пульте не совпадает с текущим, вызываем обработку направления
+      if (input.directionForward && stateMachine.getDirection() != 1 || input.directionBackward && stateMachine.getDirection() != -1) {
+        directionSwitchHandler();
+      } else {
+        result = stateMachine.incrementPower();
+      }
     }
     if (result != 0) {
       //переключение не выполнено, при необходимости добавить логику
@@ -82,9 +87,10 @@ class DelayStateController: public StateController {
     }
     if (stateMachine.getPower() > 0) {
       //При положительной мощности аварийный тормоз
+      emergencyBrakeEnabled = 1;
     }
     if (stateMachine.getPower() < 0) {
-      //При тормозе асинхронно переводим в нейтраль
+      //При тормозе продолжаем тормозить (так же не снимаемся с аварийного тормоза)
     }
   }
 
@@ -92,27 +98,46 @@ class DelayStateController: public StateController {
   InputData previousInput;
 
   //Удержание джойстика на разгон (факт удержания)
-  int powerIncrementPressed = 0;
-  //Удержание джойстика на разгон (время с момента регстрации события в мс )
+  bool powerIncrementPressed = false;
+  //Удержание джойстика на разгон (время с момента регстрации события или предыдущего срабатывания в мс)
   int powerIncrementDuration = 0;
 
   //Удержание джойстика на тормоз (факт удержания)
-  int powerDecrementPressed = 0;
-  //Удержание джойстика на тормоз (время с момента регстрации события в мс )
+  bool powerDecrementPressed = false;
+  //Удержание джойстика на тормоз (время с момента регстрации события или предыдущего срабатывания в мс)
   int powerDecrementDuration = 0;
+
+  //Аварийный тормоз (факт включения)
+  bool emergencyBrakeEnabled = false;
+  //Аварийный тормоз (время с момента регстрации события или предыдущего срабатывания в мс)
+  int emergencyBrakeDuration = 0;
 
   public:
 
   ControllerState determineState(InputData input) {
     delay(readingPeriod);
 
+    //Обработка аварийных сигналов (штатные не учитываются до выхода из аварийной ситуации)
+
+    if (emergencyBrakeEnabled) {
+      emergencyBrakeDuration += readingPeriod;
+      if (emergencyBrakeDuration >= autoSwitchingInterval) { //Достигнут период автопереключения
+        int switched = stateMachine.decrementPower();
+        emergencyBrakeDuration = 0;
+        if (switched == 1) { //Тормоз на максимуме
+          emergencyBrakeEnabled = false;
+        }
+      }
+      return stateMachine.currentControllerState;
+    }
+
     if (!previousInput.powerIncrement && input.powerIncrement) { //Нажатие джойстика на разгон
-      powerIncrementPressed = 1;
+      powerIncrementPressed = true;
       incrementPower(input);
     }
 
     if (previousInput.powerIncrement && !input.powerIncrement) { //Отпускание джойстика на разгон
-      powerIncrementPressed = 0;
+      powerIncrementPressed = false;
       powerIncrementDuration = 0;
     }
 
@@ -127,12 +152,12 @@ class DelayStateController: public StateController {
     }
 
     if (!previousInput.powerDecrement && input.powerDecrement) { //Нажатие джойстика на тормоз
-      powerDecrementPressed = 1;
+      powerDecrementPressed = true;
       decrementPower(input);
     }
 
     if (previousInput.powerDecrement && !input.powerDecrement) { //Отпускание джойстика на тормоз
-      powerDecrementPressed = 0;
+      powerDecrementPressed = false;
       powerDecrementDuration = 0;
     }
 
